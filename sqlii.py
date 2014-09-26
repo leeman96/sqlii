@@ -8,7 +8,7 @@ def Exit():
 	exit(0)
 	
 def credit():
-	print ("Main Developer - MasterBlack\nScanner - RUii of HackForums\nUse how you see fit :)")
+	print ("Main Developer - leeman96\nScanner - RUii of HackForums\nUse how you see fit :)")
 	
 def version(connect, n):
 	screenScrapeFour = urllib.request.urlopen(connect)
