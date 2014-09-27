@@ -10,7 +10,7 @@ def credit():
 	print ("* Main Developer - leeman96\n* Scanner - RUii of HackForums\n* Use how you see fit :)")
 	print ("***************************************")
 	
-def version(connect, n):
+def version(connect, n, iphost):
 	screenScrapeFour = urllib.request.urlopen(connect)
 	screenScrapeFourText = screenScrapeFour.read()
 	screenScrapeFourText = str(screenScrapeFourText)
@@ -20,7 +20,7 @@ def version(connect, n):
 		n = "MB" + str(g)
 		if n in screenScrapeFourText:
 			if y >= 1:
-				info(connect,rr,n)
+				info(connect,rr,n, iphost)
 			elif y == 0:
 				rr = g
 				y = y + 1
@@ -30,10 +30,13 @@ def url(urls):
 	protocolTwo = "https://"
 	if protocolOne in urls:
 		http = urls
+		iphost = urls
 	elif protocolTwo in urls:
 		http = urls
+		iphost = urls
 	else:
 		http = "http://" + urls
+		iphost = "http://" + urls
 	print(http)
 	screenScrapeOne = urllib.request.urlopen(http)
 	screenScrapeOneText = screenScrapeOne.read()
@@ -85,7 +88,7 @@ def url(urls):
 			connect = connect.replace("=","=-")
 			connect = connect + '--'
 			print(connect)
-			version(connect, n)
+			version(connect, n, iphost)
 					
 def scan():
 	print ("Scanning . . .")
@@ -126,7 +129,7 @@ def scan():
 	except TypeError:
 		print ("Looks like Google hates you :)")
 	
-def info(url,l,tt):
+def info(url,l,tt,iphost):
 	mb = "".join("{:02x}".format(ord(c)) for c in tt)
 	j = "0x" + mb
 	start = "<" + tt + ">"
@@ -146,9 +149,15 @@ def info(url,l,tt):
 		info = t[t.find(start)+len(start):t.rfind(end)]
 		data = input("Do you want to probe the database? (y/n)")
 		if data in ["Y", "y"]:
+			n = "http://"
+			m = "/"
+			iphost = iphost[iphost.find(n)+len(n):iphost.rfind(m)]
+			print (iphost)
+			ipaddr = socket.gethostbyname(iphost)
 			print ("********************************************")
-			print ("* Host Name: ", url)
-			print ("* IP Address: ")
+			print ("* Host Name: ", iphost)
+			print ("* IP Address: ", ipaddr)
+			print ("* Database Version: ", info)
 
 print ("Welcome")
 dExit = True
